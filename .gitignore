@@ -1,0 +1,14 @@
+# Crawled data
+output/
+
+# Python
+.venv/
+__pycache__/
+*.py[cod]
+*.egg-info/
+
+# Scrapy
+.scrapy/
+
+# OS
+.DS_Store
