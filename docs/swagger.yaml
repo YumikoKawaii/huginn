@@ -1,0 +1,1348 @@
+definitions:
+  github_com_yumikokawaii_sherry-archive_internal_dto.AuthResponse:
+    properties:
+      access_token:
+        type: string
+      refresh_token:
+        type: string
+      user:
+        $ref: '#/definitions/github_com_yumikokawaii_sherry-archive_internal_dto.UserResponse'
+    type: object
+  github_com_yumikokawaii_sherry-archive_internal_dto.BookmarkResponse:
+    properties:
+      chapter_id:
+        type: string
+      created_at:
+        type: string
+      id:
+        type: string
+      last_page_number:
+        type: integer
+      manga_id:
+        type: string
+      updated_at:
+        type: string
+    type: object
+  github_com_yumikokawaii_sherry-archive_internal_dto.ChapterResponse:
+    properties:
+      created_at:
+        type: string
+      id:
+        type: string
+      manga_id:
+        type: string
+      number:
+        type: number
+      page_count:
+        type: integer
+      title:
+        type: string
+      updated_at:
+        type: string
+    type: object
+  github_com_yumikokawaii_sherry-archive_internal_dto.ChapterWithPagesResponse:
+    properties:
+      chapter:
+        $ref: '#/definitions/github_com_yumikokawaii_sherry-archive_internal_dto.ChapterResponse'
+      pages:
+        items:
+          $ref: '#/definitions/github_com_yumikokawaii_sherry-archive_internal_dto.PageItemResponse'
+        type: array
+    type: object
+  github_com_yumikokawaii_sherry-archive_internal_dto.CreateChapterRequest:
+    properties:
+      number:
+        type: number
+      title:
+        type: string
+    type: object
+  github_com_yumikokawaii_sherry-archive_internal_dto.CreateMangaRequest:
+    properties:
+      artist:
+        type: string
+      author:
+        type: string
+      category:
+        type: string
+      description:
+        type: string
+      status:
+        $ref: '#/definitions/github_com_yumikokawaii_sherry-archive_internal_model.MangaStatus'
+      tags:
+        items:
+          type: string
+        type: array
+      title:
+        minLength: 1
+        type: string
+      type:
+        $ref: '#/definitions/github_com_yumikokawaii_sherry-archive_internal_model.MangaType'
+    required:
+    - title
+    type: object
+  github_com_yumikokawaii_sherry-archive_internal_dto.ErrorResponse:
+    properties:
+      error:
+        type: string
+    type: object
+  github_com_yumikokawaii_sherry-archive_internal_dto.LoginRequest:
+    properties:
+      email:
+        type: string
+      password:
+        type: string
+    required:
+    - email
+    - password
+    type: object
+  github_com_yumikokawaii_sherry-archive_internal_dto.LogoutRequest:
+    properties:
+      refresh_token:
+        type: string
+    required:
+    - refresh_token
+    type: object
+  github_com_yumikokawaii_sherry-archive_internal_dto.MangaResponse:
+    properties:
+      artist:
+        type: string
+      author:
+        type: string
+      category:
+        type: string
+      cover_url:
+        type: string
+      created_at:
+        type: string
+      description:
+        type: string
+      id:
+        type: string
+      owner_id:
+        type: string
+      slug:
+        type: string
+      status:
+        $ref: '#/definitions/github_com_yumikokawaii_sherry-archive_internal_model.MangaStatus'
+      tags:
+        items:
+          type: string
+        type: array
+      title:
+        type: string
+      type:
+        $ref: '#/definitions/github_com_yumikokawaii_sherry-archive_internal_model.MangaType'
+      updated_at:
+        type: string
+    type: object
+  github_com_yumikokawaii_sherry-archive_internal_dto.OneshotUploadResponse:
+    properties:
+      chapter:
+        $ref: '#/definitions/github_com_yumikokawaii_sherry-archive_internal_dto.ChapterResponse'
+      metadata_suggestions:
+        $ref: '#/definitions/github_com_yumikokawaii_sherry-archive_internal_dto.ZipMetadataSuggestions'
+      pages:
+        items:
+          $ref: '#/definitions/github_com_yumikokawaii_sherry-archive_internal_dto.PageUploadResponse'
+        type: array
+    type: object
+  github_com_yumikokawaii_sherry-archive_internal_dto.PageItemResponse:
+    properties:
+      height:
+        type: integer
+      id:
+        type: string
+      number:
+        type: integer
+      url:
+        type: string
+      width:
+        type: integer
+    type: object
+  github_com_yumikokawaii_sherry-archive_internal_dto.PageUploadResponse:
+    properties:
+      id:
+        type: string
+      number:
+        type: integer
+      object_key:
+        type: string
+    type: object
+  ? github_com_yumikokawaii_sherry-archive_internal_dto.PagedResponse-github_com_yumikokawaii_sherry-archive_internal_dto_MangaResponse
+  : properties:
+      items:
+        items:
+          $ref: '#/definitions/github_com_yumikokawaii_sherry-archive_internal_dto.MangaResponse'
+        type: array
+      limit:
+        type: integer
+      page:
+        type: integer
+      total:
+        type: integer
+    type: object
+  github_com_yumikokawaii_sherry-archive_internal_dto.PublicUserResponse:
+    properties:
+      avatar_url:
+        type: string
+      bio:
+        type: string
+      created_at:
+        type: string
+      id:
+        type: string
+      username:
+        type: string
+    type: object
+  github_com_yumikokawaii_sherry-archive_internal_dto.RefreshRequest:
+    properties:
+      refresh_token:
+        type: string
+    required:
+    - refresh_token
+    type: object
+  github_com_yumikokawaii_sherry-archive_internal_dto.RegisterRequest:
+    properties:
+      email:
+        type: string
+      password:
+        minLength: 8
+        type: string
+      username:
+        maxLength: 30
+        minLength: 3
+        type: string
+    required:
+    - email
+    - password
+    - username
+    type: object
+  github_com_yumikokawaii_sherry-archive_internal_dto.ReorderPagesRequest:
+    properties:
+      page_ids:
+        items:
+          type: string
+        minItems: 1
+        type: array
+    required:
+    - page_ids
+    type: object
+  github_com_yumikokawaii_sherry-archive_internal_dto.TokenPairResponse:
+    properties:
+      access_token:
+        type: string
+      refresh_token:
+        type: string
+    type: object
+  github_com_yumikokawaii_sherry-archive_internal_dto.UpdateChapterRequest:
+    properties:
+      number:
+        type: number
+      title:
+        type: string
+    type: object
+  github_com_yumikokawaii_sherry-archive_internal_dto.UpdateMangaRequest:
+    properties:
+      artist:
+        type: string
+      author:
+        type: string
+      category:
+        type: string
+      description:
+        type: string
+      status:
+        $ref: '#/definitions/github_com_yumikokawaii_sherry-archive_internal_model.MangaStatus'
+      tags:
+        items:
+          type: string
+        type: array
+      title:
+        type: string
+      type:
+        $ref: '#/definitions/github_com_yumikokawaii_sherry-archive_internal_model.MangaType'
+    type: object
+  github_com_yumikokawaii_sherry-archive_internal_dto.UpdateUserRequest:
+    properties:
+      bio:
+        type: string
+      username:
+        type: string
+    type: object
+  github_com_yumikokawaii_sherry-archive_internal_dto.UpsertBookmarkRequest:
+    properties:
+      chapter_id:
+        type: string
+      last_page_number:
+        minimum: 1
+        type: integer
+    required:
+    - chapter_id
+    - last_page_number
+    type: object
+  github_com_yumikokawaii_sherry-archive_internal_dto.UserResponse:
+    properties:
+      avatar_url:
+        type: string
+      bio:
+        type: string
+      created_at:
+        type: string
+      email:
+        type: string
+      id:
+        type: string
+      updated_at:
+        type: string
+      username:
+        type: string
+    type: object
+  github_com_yumikokawaii_sherry-archive_internal_dto.ZipMetadataSuggestions:
+    properties:
+      artist:
+        type: string
+      author:
+        type: string
+      category:
+        type: string
+      chapter_number:
+        type: number
+      chapter_title:
+        type: string
+      language:
+        type: string
+      tags:
+        items:
+          type: string
+        type: array
+    type: object
+  github_com_yumikokawaii_sherry-archive_internal_dto.ZipUploadResponse:
+    properties:
+      metadata_suggestions:
+        $ref: '#/definitions/github_com_yumikokawaii_sherry-archive_internal_dto.ZipMetadataSuggestions'
+      pages:
+        items:
+          $ref: '#/definitions/github_com_yumikokawaii_sherry-archive_internal_dto.PageUploadResponse'
+        type: array
+    type: object
+  github_com_yumikokawaii_sherry-archive_internal_model.MangaStatus:
+    enum:
+    - ongoing
+    - completed
+    - hiatus
+    type: string
+    x-enum-varnames:
+    - StatusOngoing
+    - StatusCompleted
+    - StatusHiatus
+  github_com_yumikokawaii_sherry-archive_internal_model.MangaType:
+    enum:
+    - series
+    - oneshot
+    type: string
+    x-enum-varnames:
+    - TypeSeries
+    - TypeOneshot
+info:
+  contact: {}
+paths:
+  /auth/login:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Login credentials
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_yumikokawaii_sherry-archive_internal_dto.LoginRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/github_com_yumikokawaii_sherry-archive_internal_dto.AuthResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/github_com_yumikokawaii_sherry-archive_internal_dto.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/github_com_yumikokawaii_sherry-archive_internal_dto.ErrorResponse'
+      summary: Login
+      tags:
+      - auth
+  /auth/logout:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Refresh token to invalidate
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_yumikokawaii_sherry-archive_internal_dto.LogoutRequest'
+      responses:
+        "204":
+          description: No Content
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/github_com_yumikokawaii_sherry-archive_internal_dto.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/github_com_yumikokawaii_sherry-archive_internal_dto.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Logout
+      tags:
+      - auth
+  /auth/me:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/github_com_yumikokawaii_sherry-archive_internal_dto.UserResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/github_com_yumikokawaii_sherry-archive_internal_dto.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Get current user
+      tags:
+      - auth
+  /auth/refresh:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Refresh token
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_yumikokawaii_sherry-archive_internal_dto.RefreshRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/github_com_yumikokawaii_sherry-archive_internal_dto.TokenPairResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/github_com_yumikokawaii_sherry-archive_internal_dto.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/github_com_yumikokawaii_sherry-archive_internal_dto.ErrorResponse'
+      summary: Refresh access token
+      tags:
+      - auth
+  /auth/register:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Registration data
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_yumikokawaii_sherry-archive_internal_dto.RegisterRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/github_com_yumikokawaii_sherry-archive_internal_dto.AuthResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/github_com_yumikokawaii_sherry-archive_internal_dto.ErrorResponse'
+        "409":
+          description: Conflict
+          schema:
+            $ref: '#/definitions/github_com_yumikokawaii_sherry-archive_internal_dto.ErrorResponse'
+      summary: Register a new user
+      tags:
+      - auth
+  /mangas:
+    get:
+      parameters:
+      - description: Search title/description
+        in: query
+        name: q
+        type: string
+      - description: Filter by status
+        enum:
+        - ongoing
+        - completed
+        - hiatus
+        in: query
+        name: status
+        type: string
+      - collectionFormat: csv
+        description: Filter by tags (AND)
+        in: query
+        items:
+          type: string
+        name: tags[]
+        type: array
+      - description: Filter by author (partial match)
+        in: query
+        name: author
+        type: string
+      - description: Filter by artist (partial match)
+        in: query
+        name: artist
+        type: string
+      - description: Filter by category (partial match)
+        in: query
+        name: category
+        type: string
+      - description: Sort order
+        enum:
+        - newest
+        - oldest
+        - title
+        in: query
+        name: sort
+        type: string
+      - default: 1
+        description: Page number
+        in: query
+        name: page
+        type: integer
+      - default: 24
+        description: Items per page
+        in: query
+        name: limit
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/github_com_yumikokawaii_sherry-archive_internal_dto.PagedResponse-github_com_yumikokawaii_sherry-archive_internal_dto_MangaResponse'
+      summary: List manga
+      tags:
+      - manga
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Manga data
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_yumikokawaii_sherry-archive_internal_dto.CreateMangaRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/github_com_yumikokawaii_sherry-archive_internal_dto.MangaResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/github_com_yumikokawaii_sherry-archive_internal_dto.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/github_com_yumikokawaii_sherry-archive_internal_dto.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Create manga
+      tags:
+      - manga
+  /mangas/{mangaID}:
+    delete:
+      parameters:
+      - description: Manga ID
+        in: path
+        name: mangaID
+        required: true
+        type: string
+      responses:
+        "204":
+          description: No Content
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/github_com_yumikokawaii_sherry-archive_internal_dto.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/github_com_yumikokawaii_sherry-archive_internal_dto.ErrorResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/github_com_yumikokawaii_sherry-archive_internal_dto.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/github_com_yumikokawaii_sherry-archive_internal_dto.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Delete manga
+      tags:
+      - manga
+    get:
+      parameters:
+      - description: Manga ID
+        in: path
+        name: mangaID
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/github_com_yumikokawaii_sherry-archive_internal_dto.MangaResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/github_com_yumikokawaii_sherry-archive_internal_dto.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/github_com_yumikokawaii_sherry-archive_internal_dto.ErrorResponse'
+      summary: Get manga by ID
+      tags:
+      - manga
+    patch:
+      consumes:
+      - application/json
+      parameters:
+      - description: Manga ID
+        in: path
+        name: mangaID
+        required: true
+        type: string
+      - description: Fields to update
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_yumikokawaii_sherry-archive_internal_dto.UpdateMangaRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/github_com_yumikokawaii_sherry-archive_internal_dto.MangaResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/github_com_yumikokawaii_sherry-archive_internal_dto.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/github_com_yumikokawaii_sherry-archive_internal_dto.ErrorResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/github_com_yumikokawaii_sherry-archive_internal_dto.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/github_com_yumikokawaii_sherry-archive_internal_dto.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Update manga
+      tags:
+      - manga
+  /mangas/{mangaID}/chapters:
+    get:
+      parameters:
+      - description: Manga ID
+        in: path
+        name: mangaID
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/github_com_yumikokawaii_sherry-archive_internal_dto.ChapterResponse'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/github_com_yumikokawaii_sherry-archive_internal_dto.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/github_com_yumikokawaii_sherry-archive_internal_dto.ErrorResponse'
+      summary: List chapters for a manga
+      tags:
+      - chapter
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Manga ID
+        in: path
+        name: mangaID
+        required: true
+        type: string
+      - description: Chapter data (number omitted for oneshot manga)
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_yumikokawaii_sherry-archive_internal_dto.CreateChapterRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/github_com_yumikokawaii_sherry-archive_internal_dto.ChapterResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/github_com_yumikokawaii_sherry-archive_internal_dto.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/github_com_yumikokawaii_sherry-archive_internal_dto.ErrorResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/github_com_yumikokawaii_sherry-archive_internal_dto.ErrorResponse'
+        "409":
+          description: Duplicate chapter number or oneshot already has a chapter
+          schema:
+            $ref: '#/definitions/github_com_yumikokawaii_sherry-archive_internal_dto.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Create chapter
+      tags:
+      - chapter
+  /mangas/{mangaID}/chapters/{chapterID}:
+    delete:
+      parameters:
+      - description: Manga ID
+        in: path
+        name: mangaID
+        required: true
+        type: string
+      - description: Chapter ID
+        in: path
+        name: chapterID
+        required: true
+        type: string
+      responses:
+        "204":
+          description: No Content
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/github_com_yumikokawaii_sherry-archive_internal_dto.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/github_com_yumikokawaii_sherry-archive_internal_dto.ErrorResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/github_com_yumikokawaii_sherry-archive_internal_dto.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/github_com_yumikokawaii_sherry-archive_internal_dto.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Delete chapter
+      tags:
+      - chapter
+    get:
+      parameters:
+      - description: Manga ID
+        in: path
+        name: mangaID
+        required: true
+        type: string
+      - description: Chapter ID
+        in: path
+        name: chapterID
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/github_com_yumikokawaii_sherry-archive_internal_dto.ChapterWithPagesResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/github_com_yumikokawaii_sherry-archive_internal_dto.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/github_com_yumikokawaii_sherry-archive_internal_dto.ErrorResponse'
+      summary: Get chapter with pages
+      tags:
+      - chapter
+    patch:
+      consumes:
+      - application/json
+      parameters:
+      - description: Manga ID
+        in: path
+        name: mangaID
+        required: true
+        type: string
+      - description: Chapter ID
+        in: path
+        name: chapterID
+        required: true
+        type: string
+      - description: Fields to update
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_yumikokawaii_sherry-archive_internal_dto.UpdateChapterRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/github_com_yumikokawaii_sherry-archive_internal_dto.ChapterResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/github_com_yumikokawaii_sherry-archive_internal_dto.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/github_com_yumikokawaii_sherry-archive_internal_dto.ErrorResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/github_com_yumikokawaii_sherry-archive_internal_dto.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/github_com_yumikokawaii_sherry-archive_internal_dto.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Update chapter
+      tags:
+      - chapter
+  /mangas/{mangaID}/chapters/{chapterID}/pages:
+    post:
+      consumes:
+      - multipart/form-data
+      parameters:
+      - description: Manga ID
+        in: path
+        name: mangaID
+        required: true
+        type: string
+      - description: Chapter ID
+        in: path
+        name: chapterID
+        required: true
+        type: string
+      - description: 'Image files (jpeg/png/webp), field name: pages'
+        in: formData
+        name: pages
+        required: true
+        type: file
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            items:
+              $ref: '#/definitions/github_com_yumikokawaii_sherry-archive_internal_dto.PageUploadResponse'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/github_com_yumikokawaii_sherry-archive_internal_dto.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/github_com_yumikokawaii_sherry-archive_internal_dto.ErrorResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/github_com_yumikokawaii_sherry-archive_internal_dto.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Upload individual pages
+      tags:
+      - page
+  /mangas/{mangaID}/chapters/{chapterID}/pages/{pageNumber}:
+    delete:
+      parameters:
+      - description: Manga ID
+        in: path
+        name: mangaID
+        required: true
+        type: string
+      - description: Chapter ID
+        in: path
+        name: chapterID
+        required: true
+        type: string
+      - description: Page number
+        in: path
+        name: pageNumber
+        required: true
+        type: integer
+      responses:
+        "204":
+          description: No Content
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/github_com_yumikokawaii_sherry-archive_internal_dto.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/github_com_yumikokawaii_sherry-archive_internal_dto.ErrorResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/github_com_yumikokawaii_sherry-archive_internal_dto.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/github_com_yumikokawaii_sherry-archive_internal_dto.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Delete a page
+      tags:
+      - page
+  /mangas/{mangaID}/chapters/{chapterID}/pages/reorder:
+    patch:
+      consumes:
+      - application/json
+      parameters:
+      - description: Manga ID
+        in: path
+        name: mangaID
+        required: true
+        type: string
+      - description: Chapter ID
+        in: path
+        name: chapterID
+        required: true
+        type: string
+      - description: Ordered list of page IDs
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_yumikokawaii_sherry-archive_internal_dto.ReorderPagesRequest'
+      responses:
+        "204":
+          description: No Content
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/github_com_yumikokawaii_sherry-archive_internal_dto.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/github_com_yumikokawaii_sherry-archive_internal_dto.ErrorResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/github_com_yumikokawaii_sherry-archive_internal_dto.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Reorder pages
+      tags:
+      - page
+  /mangas/{mangaID}/chapters/{chapterID}/pages/zip:
+    post:
+      consumes:
+      - multipart/form-data
+      description: Replaces all pages in the chapter. Files inside the ZIP are sorted
+        by filename. An optional metadata.json at the ZIP root is parsed and returned
+        as suggestions.
+      parameters:
+      - description: Manga ID
+        in: path
+        name: mangaID
+        required: true
+        type: string
+      - description: Chapter ID
+        in: path
+        name: chapterID
+        required: true
+        type: string
+      - description: ZIP archive
+        in: formData
+        name: file
+        required: true
+        type: file
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/github_com_yumikokawaii_sherry-archive_internal_dto.ZipUploadResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/github_com_yumikokawaii_sherry-archive_internal_dto.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/github_com_yumikokawaii_sherry-archive_internal_dto.ErrorResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/github_com_yumikokawaii_sherry-archive_internal_dto.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Upload pages from ZIP
+      tags:
+      - page
+  /mangas/{mangaID}/cover:
+    put:
+      consumes:
+      - multipart/form-data
+      parameters:
+      - description: Manga ID
+        in: path
+        name: mangaID
+        required: true
+        type: string
+      - description: Cover image (jpeg/png/webp)
+        in: formData
+        name: cover
+        required: true
+        type: file
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/github_com_yumikokawaii_sherry-archive_internal_dto.MangaResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/github_com_yumikokawaii_sherry-archive_internal_dto.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/github_com_yumikokawaii_sherry-archive_internal_dto.ErrorResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/github_com_yumikokawaii_sherry-archive_internal_dto.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/github_com_yumikokawaii_sherry-archive_internal_dto.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Upload manga cover
+      tags:
+      - manga
+  /mangas/{mangaID}/oneshot/upload:
+    post:
+      consumes:
+      - multipart/form-data
+      description: For oneshot manga only. Auto-creates the chapter (number=0), uploads
+        pages, sets the first page as cover if none exists, and returns metadata suggestions
+        from an optional metadata.json in the ZIP.
+      parameters:
+      - description: Manga ID (must be type=oneshot)
+        in: path
+        name: mangaID
+        required: true
+        type: string
+      - description: ZIP archive
+        in: formData
+        name: file
+        required: true
+        type: file
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/github_com_yumikokawaii_sherry-archive_internal_dto.OneshotUploadResponse'
+        "400":
+          description: Not a oneshot or invalid ZIP
+          schema:
+            $ref: '#/definitions/github_com_yumikokawaii_sherry-archive_internal_dto.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/github_com_yumikokawaii_sherry-archive_internal_dto.ErrorResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/github_com_yumikokawaii_sherry-archive_internal_dto.ErrorResponse'
+        "409":
+          description: Chapter already exists
+          schema:
+            $ref: '#/definitions/github_com_yumikokawaii_sherry-archive_internal_dto.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Upload oneshot ZIP
+      tags:
+      - page
+  /users/{userID}:
+    get:
+      parameters:
+      - description: User ID
+        in: path
+        name: userID
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/github_com_yumikokawaii_sherry-archive_internal_dto.PublicUserResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/github_com_yumikokawaii_sherry-archive_internal_dto.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/github_com_yumikokawaii_sherry-archive_internal_dto.ErrorResponse'
+      summary: Get public user profile
+      tags:
+      - user
+  /users/{userID}/mangas:
+    get:
+      parameters:
+      - description: User ID
+        in: path
+        name: userID
+        required: true
+        type: string
+      - default: 1
+        description: Page number
+        in: query
+        name: page
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/github_com_yumikokawaii_sherry-archive_internal_dto.PagedResponse-github_com_yumikokawaii_sherry-archive_internal_dto_MangaResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/github_com_yumikokawaii_sherry-archive_internal_dto.ErrorResponse'
+      summary: List manga by user
+      tags:
+      - manga
+  /users/me:
+    patch:
+      consumes:
+      - application/json
+      parameters:
+      - description: Profile fields to update
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_yumikokawaii_sherry-archive_internal_dto.UpdateUserRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/github_com_yumikokawaii_sherry-archive_internal_dto.UserResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/github_com_yumikokawaii_sherry-archive_internal_dto.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/github_com_yumikokawaii_sherry-archive_internal_dto.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Update own profile
+      tags:
+      - user
+  /users/me/avatar:
+    put:
+      consumes:
+      - multipart/form-data
+      parameters:
+      - description: Avatar image (jpeg/png/webp)
+        in: formData
+        name: avatar
+        required: true
+        type: file
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/github_com_yumikokawaii_sherry-archive_internal_dto.UserResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/github_com_yumikokawaii_sherry-archive_internal_dto.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/github_com_yumikokawaii_sherry-archive_internal_dto.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Upload avatar
+      tags:
+      - user
+  /users/me/bookmarks:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/github_com_yumikokawaii_sherry-archive_internal_dto.BookmarkResponse'
+            type: array
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/github_com_yumikokawaii_sherry-archive_internal_dto.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: List bookmarks
+      tags:
+      - bookmark
+  /users/me/bookmarks/{mangaID}:
+    delete:
+      parameters:
+      - description: Manga ID
+        in: path
+        name: mangaID
+        required: true
+        type: string
+      responses:
+        "204":
+          description: No Content
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/github_com_yumikokawaii_sherry-archive_internal_dto.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/github_com_yumikokawaii_sherry-archive_internal_dto.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Delete bookmark
+      tags:
+      - bookmark
+    get:
+      parameters:
+      - description: Manga ID
+        in: path
+        name: mangaID
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/github_com_yumikokawaii_sherry-archive_internal_dto.BookmarkResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/github_com_yumikokawaii_sherry-archive_internal_dto.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/github_com_yumikokawaii_sherry-archive_internal_dto.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/github_com_yumikokawaii_sherry-archive_internal_dto.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Get bookmark for a manga
+      tags:
+      - bookmark
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: Manga ID
+        in: path
+        name: mangaID
+        required: true
+        type: string
+      - description: Bookmark data
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_yumikokawaii_sherry-archive_internal_dto.UpsertBookmarkRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/github_com_yumikokawaii_sherry-archive_internal_dto.BookmarkResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/github_com_yumikokawaii_sherry-archive_internal_dto.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/github_com_yumikokawaii_sherry-archive_internal_dto.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Create or update bookmark
+      tags:
+      - bookmark
+swagger: "2.0"

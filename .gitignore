@@ -10,5 +10,8 @@ __pycache__/
 # Scrapy
 .scrapy/
 
+# Environment / secrets
+.env
+
 # OS
 .DS_Store
