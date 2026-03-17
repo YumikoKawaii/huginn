@@ -32,7 +32,8 @@ async def _browse_and_read(client: AnonClient) -> str | None:
     log.debug("Browsing listing page %d", page)
     try:
         result = await client.list_mangas(page=page, limit=20)
-        mangas = result.get("data", [])
+        data = result.get("data", {})
+        mangas = data.get("items", []) if isinstance(data, dict) else data
     except Exception as exc:
         log.warning("Failed to fetch listing page %d: %s", page, exc)
         return None

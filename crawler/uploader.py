@@ -51,7 +51,8 @@ def _find_archive_manga(client: ApiClient, title: str) -> tuple[str | None, set[
     """
     try:
         results = client.list_mangas(q=title, limit=5)
-        items = results.get("data", [])
+        data = results.get("data", {})
+        items = data.get("items", []) if isinstance(data, dict) else data
         match = next(
             (m for m in items if m.get("title", "").lower() == title.lower()),
             items[0] if items else None,
