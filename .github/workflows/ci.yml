@@ -77,8 +77,8 @@ jobs:
 
             docker run -d --restart unless-stopped \
               -e API_BASE_URL=$API_BASE_URL \
-              -e BOT_CCU=$BOT_CCU \
-              -e BOT_USER_COUNT=$BOT_USER_COUNT \
+              ${BOT_CCU:+-e BOT_CCU=$BOT_CCU} \
+              ${BOT_USER_COUNT:+-e BOT_USER_COUNT=$BOT_USER_COUNT} \
               --name huginn-bot \
               $REGISTRY/$REPO:latest bot
           "

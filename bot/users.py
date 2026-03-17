@@ -20,7 +20,7 @@ from shared.api_client import ApiClient
 log = logging.getLogger(__name__)
 
 CREDS_FILE = Path(os.environ.get("BOT_CREDS_FILE", "/tmp/bot_creds.json"))
-BOT_USER_COUNT = int(os.environ.get("BOT_USER_COUNT", "20"))
+BOT_USER_COUNT = int(os.environ.get("BOT_USER_COUNT") or "20")
 
 
 def _random_str(n: int) -> str:
