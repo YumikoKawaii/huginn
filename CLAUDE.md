@@ -71,7 +71,7 @@ API_EMAIL=your@email.com
 API_PASSWORD=yourpassword
 MAX_CHAPTERS=350
 MAX_RANDOM_MANGA=100
-BOT_CCU=20
+BOT_CCU=10
 ```
 
 ## Key Files

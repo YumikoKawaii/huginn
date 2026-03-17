@@ -31,7 +31,7 @@ from bot.behaviors import anonymous_session, authenticated_session
 
 log = logging.getLogger(__name__)
 
-CCU = int(os.environ.get("BOT_CCU", "20"))
+CCU = int(os.environ.get("BOT_CCU", "10"))
 _SESSION_PAUSE = (3.0, 10.0)
 _AUTH_RATIO = 0.30
 _LOG_EVERY = 10  # log worker stats every N sessions
