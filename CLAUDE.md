@@ -26,27 +26,12 @@ SCRAPY_SETTINGS_MODULE=crawler.settings .venv/bin/python -m scrapy crawl mangade
 ### Crawler (ECS scheduled task — hourly)
 Fetches new MangaDex chapters and uploads them to the archive.
 
-### Bot (EC2 t3.micro — manual Docker deployment)
+### Bot (EC2 t3.micro — auto-deployed by CI)
 Simulates user traffic against the archive. Registers bot users on first start,
 then runs 20 concurrent async workers indefinitely.
 
-**Deploy bot manually:**
-```bash
-# SSH into t3.micro
-ssh ec2-user@<instance-ip>
-
-# Authenticate to ECR and pull latest image
-aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $ECR_REGISTRY
-docker pull $ECR_REGISTRY/huginn:latest
-
-# Run bot (detached, with restart)
-docker run -d --restart unless-stopped \
-  -e API_BASE_URL=https://sherry-archive.com/api/v1 \
-  -e BOT_CCU=20 \
-  -e BOT_USER_COUNT=20 \
-  --name huginn-bot \
-  $ECR_REGISTRY/huginn:latest bot
-```
+CI SSHes into the t3.micro after every push to `master`, pulls the new image,
+and restarts the container automatically.
 
 ## Architecture
 
@@ -146,13 +131,20 @@ On push to `master`, GitHub Actions lints then builds and pushes `latest` to ECR
 | `MAX_RANDOM_MANGA` | `100` | |
 | `CRAWL_LANGUAGE` | `en` | |
 
-**Bot (EC2 t3.micro — docker run env vars):**
+**Bot (EC2 t3.micro — deployed via CI SSH):**
 
 | Variable | Default | Required |
 |---|---|---|
-| `API_BASE_URL` | — | ✓ |
-| `BOT_CCU` | `20` | |
-| `BOT_USER_COUNT` | `20` | |
+| `API_BASE_URL` | — | ✓ (secret `API_BASE_URL`) |
+| `BOT_CCU` | `20` | (secret `BOT_CCU`) |
+| `BOT_USER_COUNT` | `20` | (secret `BOT_USER_COUNT`) |
 | `BOT_CREDS_FILE` | `/tmp/bot_creds.json` | |
 
-CI only pushes the image to ECR. Bot deployment is manual — SSH + docker pull + docker run.
+**Additional secrets for bot deploy:**
+
+| Secret | Description |
+|---|---|
+| `EC2_HOST` | t3.micro public IP or hostname |
+| `EC2_USER` | SSH user (e.g. `ec2-user`) |
+| `EC2_SSH_KEY` | Private key content (PEM) |
+| `ECR_REGISTRY` | Full ECR registry URL (e.g. `123456789.dkr.ecr.ap-southeast-1.amazonaws.com`) |

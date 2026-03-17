@@ -45,3 +45,41 @@ jobs:
         run: |
           docker build -t $REGISTRY/$REPO:latest .
           docker push $REGISTRY/$REPO:latest
+
+  deploy-bot:
+    needs: build-and-push
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Deploy bot to EC2
+        env:
+          EC2_HOST: ${{ secrets.EC2_HOST }}
+          EC2_USER: ${{ secrets.EC2_USER }}
+          EC2_SSH_KEY: ${{ secrets.EC2_SSH_KEY }}
+          REGISTRY: ${{ secrets.ECR_REGISTRY }}
+          REPO: ${{ secrets.ECR_REPO }}
+          AWS_REGION: ${{ secrets.AWS_REGION }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          API_BASE_URL: ${{ secrets.API_BASE_URL }}
+          BOT_CCU: ${{ secrets.BOT_CCU }}
+          BOT_USER_COUNT: ${{ secrets.BOT_USER_COUNT }}
+        run: |
+          echo "$EC2_SSH_KEY" > /tmp/ec2_key
+          chmod 600 /tmp/ec2_key
+          ssh -o StrictHostKeyChecking=no -i /tmp/ec2_key $EC2_USER@$EC2_HOST "
+            aws ecr get-login-password --region $AWS_REGION \
+              | docker login --username AWS --password-stdin $REGISTRY
+
+            docker pull $REGISTRY/$REPO:latest
+
+            docker rm -f huginn-bot || true
+
+            docker run -d --restart unless-stopped \
+              -e API_BASE_URL=$API_BASE_URL \
+              -e BOT_CCU=${BOT_CCU:-20} \
+              -e BOT_USER_COUNT=${BOT_USER_COUNT:-20} \
+              --name huginn-bot \
+              $REGISTRY/$REPO:latest bot
+          "
+          rm -f /tmp/ec2_key
