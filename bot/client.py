@@ -62,7 +62,7 @@ class AuthClient(AnonClient):
         async with self._session.post(
             f"{self._base}/auth/logout",
             headers=self._auth_headers(),
-        ) as r:
+        ):
             pass
         self._access_token = ""
 

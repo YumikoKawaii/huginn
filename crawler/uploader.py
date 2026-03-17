@@ -231,11 +231,15 @@ def upload_all(client: ApiClient, zips_dir: Path):
 
     if oneshot_zips:
         o, s, f = _upload_oneshots(client, oneshot_zips)
-        ok += o; skipped += s; failed += f
+        ok += o
+        skipped += s
+        failed += f
 
     if series_zips:
         o, s, f = _upload_series(client, series_zips)
-        ok += o; skipped += s; failed += f
+        ok += o
+        skipped += s
+        failed += f
 
     log.info("Upload done — %d succeeded / %d skipped / %d failed", ok, skipped, len(failed))
     for name, err in failed:
