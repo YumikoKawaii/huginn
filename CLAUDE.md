@@ -140,7 +140,7 @@ On push to `master`, GitHub Actions lints then builds and pushes `latest` to ECR
 | `BOT_USER_COUNT` | `20` | (secret `BOT_USER_COUNT`) |
 | `BOT_CREDS_FILE` | `/tmp/bot_creds.json` | |
 
-**Additional secrets for bot deploy:**
+**Additional secrets for bot deploy** (on top of the existing AWS secrets):
 
 | Secret | Description |
 |---|---|
@@ -148,3 +148,5 @@ On push to `master`, GitHub Actions lints then builds and pushes `latest` to ECR
 | `EC2_USER` | SSH user (e.g. `ec2-user`) |
 | `EC2_SSH_KEY` | Private key content (PEM) |
 | `ECR_REGISTRY` | Full ECR registry URL (e.g. `123456789.dkr.ecr.ap-southeast-1.amazonaws.com`) |
+
+`API_BASE_URL`, `BOT_CCU`, `BOT_USER_COUNT` are reused from existing secrets.
