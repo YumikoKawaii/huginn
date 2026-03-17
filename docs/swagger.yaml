@@ -1,0 +1,1653 @@
+definitions:
+  dto.AuthResponse:
+    properties:
+      access_token:
+        type: string
+      refresh_token:
+        type: string
+      user:
+        $ref: '#/definitions/dto.UserResponse'
+    type: object
+  dto.BookmarkResponse:
+    properties:
+      chapter_id:
+        type: string
+      created_at:
+        type: string
+      id:
+        type: string
+      last_page_number:
+        type: integer
+      manga_id:
+        type: string
+      updated_at:
+        type: string
+    type: object
+  dto.ChapterResponse:
+    properties:
+      created_at:
+        type: string
+      id:
+        type: string
+      manga_id:
+        type: string
+      number:
+        type: number
+      page_count:
+        type: integer
+      title:
+        type: string
+      updated_at:
+        type: string
+    type: object
+  dto.ChapterWithPagesResponse:
+    properties:
+      chapter:
+        $ref: '#/definitions/dto.ChapterResponse'
+      pages:
+        items:
+          $ref: '#/definitions/dto.PageItemResponse'
+        type: array
+    type: object
+  dto.CommentAuthor:
+    properties:
+      avatar_url:
+        type: string
+      id:
+        type: string
+      username:
+        type: string
+    type: object
+  dto.CommentResponse:
+    properties:
+      author:
+        $ref: '#/definitions/dto.CommentAuthor'
+      content:
+        type: string
+      created_at:
+        type: string
+      edited:
+        type: boolean
+      id:
+        type: string
+      updated_at:
+        type: string
+    type: object
+  dto.CreateChapterRequest:
+    properties:
+      number:
+        type: number
+      title:
+        type: string
+    type: object
+  dto.CreateCommentRequest:
+    properties:
+      content:
+        maxLength: 2000
+        minLength: 1
+        type: string
+    required:
+    - content
+    type: object
+  dto.CreateMangaRequest:
+    properties:
+      artist:
+        type: string
+      author:
+        type: string
+      category:
+        type: string
+      description:
+        type: string
+      status:
+        $ref: '#/definitions/model.MangaStatus'
+      tags:
+        items:
+          type: string
+        type: array
+      title:
+        minLength: 1
+        type: string
+      type:
+        $ref: '#/definitions/model.MangaType'
+    required:
+    - title
+    type: object
+  dto.EnqueueResponse:
+    properties:
+      task_id:
+        type: string
+    type: object
+  dto.ErrorResponse:
+    properties:
+      error:
+        type: string
+    type: object
+  dto.LoginRequest:
+    properties:
+      email:
+        type: string
+      password:
+        type: string
+    required:
+    - email
+    - password
+    type: object
+  dto.LogoutRequest:
+    properties:
+      refresh_token:
+        type: string
+    required:
+    - refresh_token
+    type: object
+  dto.MangaResponse:
+    properties:
+      artist:
+        type: string
+      author:
+        type: string
+      category:
+        type: string
+      cover_url:
+        type: string
+      created_at:
+        type: string
+      description:
+        type: string
+      id:
+        type: string
+      owner_id:
+        type: string
+      slug:
+        type: string
+      status:
+        $ref: '#/definitions/model.MangaStatus'
+      tags:
+        items:
+          type: string
+        type: array
+      title:
+        type: string
+      type:
+        $ref: '#/definitions/model.MangaType'
+      updated_at:
+        type: string
+    type: object
+  dto.PageItemResponse:
+    properties:
+      height:
+        type: integer
+      id:
+        type: string
+      number:
+        type: integer
+      url:
+        type: string
+      width:
+        type: integer
+    type: object
+  dto.PageUploadResponse:
+    properties:
+      id:
+        type: string
+      number:
+        type: integer
+      object_key:
+        type: string
+    type: object
+  dto.PagedCommentResponse:
+    properties:
+      items:
+        items:
+          $ref: '#/definitions/dto.CommentResponse'
+        type: array
+      limit:
+        type: integer
+      page:
+        type: integer
+      total:
+        type: integer
+    type: object
+  dto.PagedMangaResponse:
+    properties:
+      items:
+        items:
+          $ref: '#/definitions/dto.MangaResponse'
+        type: array
+      limit:
+        type: integer
+      page:
+        type: integer
+      total:
+        type: integer
+    type: object
+  dto.PublicUserResponse:
+    properties:
+      avatar_url:
+        type: string
+      bio:
+        type: string
+      created_at:
+        type: string
+      id:
+        type: string
+      username:
+        type: string
+    type: object
+  dto.RefreshRequest:
+    properties:
+      refresh_token:
+        type: string
+    required:
+    - refresh_token
+    type: object
+  dto.RegisterRequest:
+    properties:
+      email:
+        type: string
+      password:
+        minLength: 8
+        type: string
+      username:
+        maxLength: 30
+        minLength: 3
+        type: string
+    required:
+    - email
+    - password
+    - username
+    type: object
+  dto.ReorderPagesRequest:
+    properties:
+      page_ids:
+        items:
+          type: string
+        minItems: 1
+        type: array
+    required:
+    - page_ids
+    type: object
+  dto.TokenPairResponse:
+    properties:
+      access_token:
+        type: string
+      refresh_token:
+        type: string
+    type: object
+  dto.UpdateChapterRequest:
+    properties:
+      number:
+        type: number
+      title:
+        type: string
+    type: object
+  dto.UpdateCommentRequest:
+    properties:
+      content:
+        maxLength: 2000
+        minLength: 1
+        type: string
+    required:
+    - content
+    type: object
+  dto.UpdateMangaRequest:
+    properties:
+      artist:
+        type: string
+      author:
+        type: string
+      category:
+        type: string
+      description:
+        type: string
+      status:
+        $ref: '#/definitions/model.MangaStatus'
+      tags:
+        items:
+          type: string
+        type: array
+      title:
+        type: string
+      type:
+        $ref: '#/definitions/model.MangaType'
+    type: object
+  dto.UpdateUserRequest:
+    properties:
+      bio:
+        type: string
+      username:
+        type: string
+    type: object
+  dto.UploadTaskResponse:
+    properties:
+      chapter_id:
+        type: string
+      created_at:
+        type: string
+      error:
+        type: string
+      id:
+        type: string
+      manga_id:
+        type: string
+      status:
+        $ref: '#/definitions/model.UploadTaskStatus'
+      type:
+        $ref: '#/definitions/model.UploadTaskType'
+      updated_at:
+        type: string
+    type: object
+  dto.UpsertBookmarkRequest:
+    properties:
+      chapter_id:
+        type: string
+      last_page_number:
+        minimum: 1
+        type: integer
+    required:
+    - chapter_id
+    - last_page_number
+    type: object
+  dto.UserResponse:
+    properties:
+      avatar_url:
+        type: string
+      bio:
+        type: string
+      created_at:
+        type: string
+      email:
+        type: string
+      id:
+        type: string
+      updated_at:
+        type: string
+      username:
+        type: string
+    type: object
+  model.MangaStatus:
+    enum:
+    - ongoing
+    - completed
+    - hiatus
+    type: string
+    x-enum-varnames:
+    - StatusOngoing
+    - StatusCompleted
+    - StatusHiatus
+  model.MangaType:
+    enum:
+    - series
+    - oneshot
+    type: string
+    x-enum-varnames:
+    - TypeSeries
+    - TypeOneshot
+  model.UploadTaskStatus:
+    enum:
+    - pending
+    - processing
+    - done
+    - failed
+    type: string
+    x-enum-varnames:
+    - UploadTaskStatusPending
+    - UploadTaskStatusProcessing
+    - UploadTaskStatusDone
+    - UploadTaskStatusFailed
+  model.UploadTaskType:
+    enum:
+    - zip
+    - oneshot_zip
+    type: string
+    x-enum-varnames:
+    - UploadTaskTypeZip
+    - UploadTaskTypeOneshotZip
+info:
+  contact: {}
+paths:
+  /auth/login:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Login credentials
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/dto.LoginRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.AuthResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+      summary: Login
+      tags:
+      - auth
+  /auth/logout:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Refresh token to invalidate
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/dto.LogoutRequest'
+      responses:
+        "204":
+          description: No Content
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Logout
+      tags:
+      - auth
+  /auth/me:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.UserResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Get current user
+      tags:
+      - auth
+  /auth/refresh:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Refresh token
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/dto.RefreshRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.TokenPairResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+      summary: Refresh access token
+      tags:
+      - auth
+  /auth/register:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Registration data
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/dto.RegisterRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/dto.AuthResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+        "409":
+          description: Conflict
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+      summary: Register a new user
+      tags:
+      - auth
+  /mangas:
+    get:
+      parameters:
+      - description: Search title/description
+        in: query
+        name: q
+        type: string
+      - description: Filter by status
+        enum:
+        - ongoing
+        - completed
+        - hiatus
+        in: query
+        name: status
+        type: string
+      - collectionFormat: csv
+        description: Filter by tags (AND)
+        in: query
+        items:
+          type: string
+        name: tags[]
+        type: array
+      - description: Filter by author (partial match)
+        in: query
+        name: author
+        type: string
+      - description: Filter by artist (partial match)
+        in: query
+        name: artist
+        type: string
+      - description: Filter by category (partial match)
+        in: query
+        name: category
+        type: string
+      - description: Sort order
+        enum:
+        - newest
+        - oldest
+        - title
+        in: query
+        name: sort
+        type: string
+      - default: 1
+        description: Page number
+        in: query
+        name: page
+        type: integer
+      - default: 24
+        description: Items per page
+        in: query
+        name: limit
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.PagedMangaResponse'
+      summary: List manga
+      tags:
+      - manga
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Manga data
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/dto.CreateMangaRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/dto.MangaResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Create manga
+      tags:
+      - manga
+  /mangas/{mangaID}:
+    delete:
+      parameters:
+      - description: Manga ID
+        in: path
+        name: mangaID
+        required: true
+        type: string
+      responses:
+        "204":
+          description: No Content
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Delete manga
+      tags:
+      - manga
+    get:
+      parameters:
+      - description: Manga ID
+        in: path
+        name: mangaID
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.MangaResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+      summary: Get manga by ID
+      tags:
+      - manga
+    patch:
+      consumes:
+      - application/json
+      parameters:
+      - description: Manga ID
+        in: path
+        name: mangaID
+        required: true
+        type: string
+      - description: Fields to update
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/dto.UpdateMangaRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.MangaResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Update manga
+      tags:
+      - manga
+  /mangas/{mangaID}/chapters:
+    get:
+      parameters:
+      - description: Manga ID
+        in: path
+        name: mangaID
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/dto.ChapterResponse'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+      summary: List chapters for a manga
+      tags:
+      - chapter
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Manga ID
+        in: path
+        name: mangaID
+        required: true
+        type: string
+      - description: Chapter data (number omitted for oneshot manga)
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/dto.CreateChapterRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/dto.ChapterResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+        "409":
+          description: Duplicate chapter number or oneshot already has a chapter
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Create chapter
+      tags:
+      - chapter
+  /mangas/{mangaID}/chapters/{chapterID}:
+    delete:
+      parameters:
+      - description: Manga ID
+        in: path
+        name: mangaID
+        required: true
+        type: string
+      - description: Chapter ID
+        in: path
+        name: chapterID
+        required: true
+        type: string
+      responses:
+        "204":
+          description: No Content
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Delete chapter
+      tags:
+      - chapter
+    get:
+      parameters:
+      - description: Manga ID
+        in: path
+        name: mangaID
+        required: true
+        type: string
+      - description: Chapter ID
+        in: path
+        name: chapterID
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.ChapterWithPagesResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+      summary: Get chapter with pages
+      tags:
+      - chapter
+    patch:
+      consumes:
+      - application/json
+      parameters:
+      - description: Manga ID
+        in: path
+        name: mangaID
+        required: true
+        type: string
+      - description: Chapter ID
+        in: path
+        name: chapterID
+        required: true
+        type: string
+      - description: Fields to update
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/dto.UpdateChapterRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.ChapterResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Update chapter
+      tags:
+      - chapter
+  /mangas/{mangaID}/chapters/{chapterID}/comments:
+    get:
+      parameters:
+      - description: Manga ID
+        in: path
+        name: mangaID
+        required: true
+        type: string
+      - description: Chapter ID
+        in: path
+        name: chapterID
+        required: true
+        type: string
+      - description: Page
+        in: query
+        name: page
+        type: integer
+      - description: Limit
+        in: query
+        name: limit
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.PagedCommentResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+      summary: List chapter comments
+      tags:
+      - comment
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Manga ID
+        in: path
+        name: mangaID
+        required: true
+        type: string
+      - description: Chapter ID
+        in: path
+        name: chapterID
+        required: true
+        type: string
+      - description: Comment
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/dto.CreateCommentRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/dto.CommentResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Post a chapter comment
+      tags:
+      - comment
+  /mangas/{mangaID}/chapters/{chapterID}/pages:
+    post:
+      consumes:
+      - multipart/form-data
+      parameters:
+      - description: Manga ID
+        in: path
+        name: mangaID
+        required: true
+        type: string
+      - description: Chapter ID
+        in: path
+        name: chapterID
+        required: true
+        type: string
+      - description: 'Image files (jpeg/png/webp), field name: pages'
+        in: formData
+        name: pages
+        required: true
+        type: file
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            items:
+              $ref: '#/definitions/dto.PageUploadResponse'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Upload individual pages
+      tags:
+      - page
+  /mangas/{mangaID}/chapters/{chapterID}/pages/{pageNumber}:
+    delete:
+      parameters:
+      - description: Manga ID
+        in: path
+        name: mangaID
+        required: true
+        type: string
+      - description: Chapter ID
+        in: path
+        name: chapterID
+        required: true
+        type: string
+      - description: Page number
+        in: path
+        name: pageNumber
+        required: true
+        type: integer
+      responses:
+        "204":
+          description: No Content
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Delete a page
+      tags:
+      - page
+  /mangas/{mangaID}/chapters/{chapterID}/pages/reorder:
+    patch:
+      consumes:
+      - application/json
+      parameters:
+      - description: Manga ID
+        in: path
+        name: mangaID
+        required: true
+        type: string
+      - description: Chapter ID
+        in: path
+        name: chapterID
+        required: true
+        type: string
+      - description: Ordered list of page IDs
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/dto.ReorderPagesRequest'
+      responses:
+        "204":
+          description: No Content
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Reorder pages
+      tags:
+      - page
+  /mangas/{mangaID}/chapters/{chapterID}/pages/zip:
+    post:
+      consumes:
+      - multipart/form-data
+      description: Enqueues a ZIP upload for async processing. Returns 202 with a
+        task_id to poll for status.
+      parameters:
+      - description: Manga ID
+        in: path
+        name: mangaID
+        required: true
+        type: string
+      - description: Chapter ID
+        in: path
+        name: chapterID
+        required: true
+        type: string
+      - description: ZIP archive
+        in: formData
+        name: file
+        required: true
+        type: file
+      produces:
+      - application/json
+      responses:
+        "202":
+          description: Accepted
+          schema:
+            $ref: '#/definitions/dto.EnqueueResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Upload pages from ZIP (async)
+      tags:
+      - page
+  /mangas/{mangaID}/comments:
+    get:
+      parameters:
+      - description: Manga ID
+        in: path
+        name: mangaID
+        required: true
+        type: string
+      - description: Page
+        in: query
+        name: page
+        type: integer
+      - description: Limit
+        in: query
+        name: limit
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.PagedCommentResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+      summary: List manga-level comments
+      tags:
+      - comment
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Manga ID
+        in: path
+        name: mangaID
+        required: true
+        type: string
+      - description: Comment
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/dto.CreateCommentRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/dto.CommentResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Post a manga-level comment
+      tags:
+      - comment
+  /mangas/{mangaID}/comments/{commentID}:
+    delete:
+      parameters:
+      - description: Manga ID
+        in: path
+        name: mangaID
+        required: true
+        type: string
+      - description: Comment ID
+        in: path
+        name: commentID
+        required: true
+        type: string
+      responses:
+        "204":
+          description: No Content
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Delete a comment (comment owner or manga owner)
+      tags:
+      - comment
+    patch:
+      consumes:
+      - application/json
+      parameters:
+      - description: Manga ID
+        in: path
+        name: mangaID
+        required: true
+        type: string
+      - description: Comment ID
+        in: path
+        name: commentID
+        required: true
+        type: string
+      - description: Updated content
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/dto.UpdateCommentRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.CommentResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Edit a comment (owner only)
+      tags:
+      - comment
+  /mangas/{mangaID}/cover:
+    put:
+      consumes:
+      - multipart/form-data
+      parameters:
+      - description: Manga ID
+        in: path
+        name: mangaID
+        required: true
+        type: string
+      - description: Cover image (jpeg/png/webp)
+        in: formData
+        name: cover
+        required: true
+        type: file
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.MangaResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Upload manga cover
+      tags:
+      - manga
+  /mangas/{mangaID}/oneshot/upload:
+    post:
+      consumes:
+      - multipart/form-data
+      description: For oneshot manga only. Enqueues zip processing; Lambda creates
+        the chapter and uploads pages. Returns 202 with a task_id to poll for status.
+      parameters:
+      - description: Manga ID (must be type=oneshot)
+        in: path
+        name: mangaID
+        required: true
+        type: string
+      - description: ZIP archive
+        in: formData
+        name: file
+        required: true
+        type: file
+      produces:
+      - application/json
+      responses:
+        "202":
+          description: Accepted
+          schema:
+            $ref: '#/definitions/dto.EnqueueResponse'
+        "400":
+          description: Not a oneshot or invalid ZIP
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Upload oneshot ZIP (async)
+      tags:
+      - page
+  /tasks/{taskID}:
+    get:
+      parameters:
+      - description: Task ID
+        in: path
+        name: taskID
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.UploadTaskResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Get upload task status
+      tags:
+      - upload
+  /users/{userID}:
+    get:
+      parameters:
+      - description: User ID
+        in: path
+        name: userID
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.PublicUserResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+      summary: Get public user profile
+      tags:
+      - user
+  /users/{userID}/mangas:
+    get:
+      parameters:
+      - description: User ID
+        in: path
+        name: userID
+        required: true
+        type: string
+      - default: 1
+        description: Page number
+        in: query
+        name: page
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.PagedMangaResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+      summary: List manga by user
+      tags:
+      - manga
+  /users/me:
+    patch:
+      consumes:
+      - application/json
+      parameters:
+      - description: Profile fields to update
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/dto.UpdateUserRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.UserResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Update own profile
+      tags:
+      - user
+  /users/me/avatar:
+    put:
+      consumes:
+      - multipart/form-data
+      parameters:
+      - description: Avatar image (jpeg/png/webp)
+        in: formData
+        name: avatar
+        required: true
+        type: file
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.UserResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Upload avatar
+      tags:
+      - user
+  /users/me/bookmarks:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/dto.BookmarkResponse'
+            type: array
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: List bookmarks
+      tags:
+      - bookmark
+  /users/me/bookmarks/{mangaID}:
+    delete:
+      parameters:
+      - description: Manga ID
+        in: path
+        name: mangaID
+        required: true
+        type: string
+      responses:
+        "204":
+          description: No Content
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Delete bookmark
+      tags:
+      - bookmark
+    get:
+      parameters:
+      - description: Manga ID
+        in: path
+        name: mangaID
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.BookmarkResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Get bookmark for a manga
+      tags:
+      - bookmark
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: Manga ID
+        in: path
+        name: mangaID
+        required: true
+        type: string
+      - description: Bookmark data
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/dto.UpsertBookmarkRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.BookmarkResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Create or update bookmark
+      tags:
+      - bookmark
+swagger: "2.0"

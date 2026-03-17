@@ -1,0 +1,7 @@
+# Priority series — one title per line (MangaDex text search, highest relevance wins)
+# These are fetched first on every run; only new chapters are downloaded.
+# Lines starting with # are ignored.
+
+# Berserk
+# One Piece
+# Chainsaw Man

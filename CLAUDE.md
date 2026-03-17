@@ -1,0 +1,118 @@
+# huginn
+
+## Python environment
+Use `.venv/bin/python` — run all commands as `.venv/bin/python ...`
+
+## Components
+
+## Commands
+
+```bash
+# Install dependencies
+.venv/bin/pip install -r requirements.txt
+
+# Run crawler (priority sync → discovery → download → upload)
+.venv/bin/python huginn.py crawl
+
+# Run bot (long-running, 20 CCU)
+.venv/bin/python huginn.py bot
+
+# Run MangaDex spider directly
+SCRAPY_SETTINGS_MODULE=crawler.settings .venv/bin/python -m scrapy crawl mangadex
+SCRAPY_SETTINGS_MODULE=crawler.settings .venv/bin/python -m scrapy crawl mangadex -a max_manga=50 -a max_chapters=3
+SCRAPY_SETTINGS_MODULE=crawler.settings .venv/bin/python -m scrapy crawl mangadex -a manga_id=<uuid>
+```
+
+### Crawler (ECS scheduled task — hourly)
+Fetches new MangaDex chapters and uploads them to the archive.
+
+### Bot (ECS long-running task)
+Simulates user traffic against the archive. Registers bot users on first start,
+then runs 20 concurrent async workers indefinitely.
+
+## Architecture
+
+**Crawler flow:**
+1. `crawler/runner.py` — entrypoint; orchestrates all phases
+2. `crawler/sync.py` — for each priority title: search MangaDex + check archive → return only new chapter IDs
+3. Scrapy (`crawler/spiders/mangadex_spider.py`) — downloads images, zips per chapter
+4. `crawler/uploader.py` — pushes zips to archive API
+
+**Scrapy pipeline order** (set in `crawler/settings.py`):
+1. `ImageDownloadPipeline` — downloads images to `output/images/<group_id>/`
+2. `ImageMetaPipeline` — fills width/height/format via Pillow
+3. `ZipGroupPipeline` — zips completed chapters to `output/zips/`
+
+**Bot flow:**
+- `bot/users.py` — registers BOT_USER_COUNT accounts on first run, saves to `/tmp/bot_creds.json`
+- `bot/behaviors.py` — `anonymous_session()` and `authenticated_session()`
+- `bot/runner.py` — 20 CCU asyncio workers; 30% auth / 70% anonymous
+
+## Output structure
+```
+output/
+  images/
+    oneshots/<chapter_uuid>/1.jpg ...
+    series/<chapter_uuid>/1.jpg ...
+  zips/
+    oneshots/<chapter_uuid>.zip
+    series/<chapter_uuid>.zip
+```
+
+## Configuration
+
+Copy `.env.example` to `.env`:
+```
+API_BASE_URL=https://sherry-archive.com/api/v1
+API_EMAIL=your@email.com
+API_PASSWORD=yourpassword
+MAX_CHAPTERS=350
+MAX_RANDOM_MANGA=100
+BOT_CCU=20
+```
+
+## Key Files
+
+| File | Purpose |
+|---|---|
+| `crawler/runner.py` | Crawler entrypoint (priority → discovery → download → upload) |
+| `crawler/sync.py` | Incremental sync: find new chapters not yet in archive |
+| `crawler/uploader.py` | Upload oneshot + series zips to archive API |
+| `crawler/spiders/mangadex_spider.py` | MangaDex spider (priority/direct/discovery modes) |
+| `crawler/pipelines.py` | Download → metadata → zip pipeline |
+| `crawler/priority.txt` | Pinned series titles (one per line) |
+| `bot/runner.py` | Bot entrypoint (20 CCU long-running) |
+| `bot/behaviors.py` | Session behavior functions |
+| `bot/users.py` | Bot user registration + credential management |
+| `shared/api_client.py` | Authenticated HTTP client for sherry-archive.com |
+| `Dockerfile` | Single image for both crawler and bot |
+| `huginn.py` | Unified CLI entrypoint (`crawl` / `bot`) |
+
+## Metadata format (inside each zip)
+```json
+{
+  "manga_id": "<mangadex-uuid>",
+  "manga_title": "...",
+  "cover_url": "...",
+  "chapter_number": 1,
+  "chapter_title": "...",
+  "author": "...",
+  "artist": "...",
+  "tags": ["..."],
+  "category": "shounen",
+  "language": "english"
+}
+```
+
+## CI / Deploy
+
+On push to `main`, GitHub Actions builds both Docker images and pushes to ECR.
+
+Required repository secrets:
+- `AWS_ROLE_ARN` — IAM role with ECR push permissions (OIDC)
+- `AWS_REGION`
+- `ECR_REPO` — single ECR repository for both crawler and bot
+
+In ECS, both task definitions use the same image with different commands:
+- Crawler task: `["crawl"]`
+- Bot task: `["bot"]`

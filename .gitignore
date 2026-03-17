@@ -1,0 +1,17 @@
+# Crawled data
+output/
+
+# Python
+.venv/
+__pycache__/
+*.py[cod]
+*.egg-info/
+
+# Scrapy
+.scrapy/
+
+# Environment / secrets
+.env
+
+# OS
+.DS_Store
