@@ -26,9 +26,27 @@ SCRAPY_SETTINGS_MODULE=crawler.settings .venv/bin/python -m scrapy crawl mangade
 ### Crawler (ECS scheduled task — hourly)
 Fetches new MangaDex chapters and uploads them to the archive.
 
-### Bot (ECS long-running task)
+### Bot (EC2 t3.micro — manual Docker deployment)
 Simulates user traffic against the archive. Registers bot users on first start,
 then runs 20 concurrent async workers indefinitely.
+
+**Deploy bot manually:**
+```bash
+# SSH into t3.micro
+ssh ec2-user@<instance-ip>
+
+# Authenticate to ECR and pull latest image
+aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $ECR_REGISTRY
+docker pull $ECR_REGISTRY/huginn:latest
+
+# Run bot (detached, with restart)
+docker run -d --restart unless-stopped \
+  -e API_BASE_URL=https://sherry-archive.com/api/v1 \
+  -e BOT_CCU=20 \
+  -e BOT_USER_COUNT=20 \
+  --name huginn-bot \
+  $ECR_REGISTRY/huginn:latest bot
+```
 
 ## Architecture
 
@@ -106,8 +124,7 @@ BOT_CCU=20
 
 ## CI / Deploy
 
-On push to `master`, GitHub Actions lints then builds and pushes to ECR.
-Image is tagged with the first 8 chars of the commit SHA + `latest`.
+On push to `master`, GitHub Actions lints then builds and pushes `latest` to ECR.
 
 **GitHub Secrets:**
 
@@ -129,7 +146,7 @@ Image is tagged with the first 8 chars of the commit SHA + `latest`.
 | `MAX_RANDOM_MANGA` | `100` | |
 | `CRAWL_LANGUAGE` | `en` | |
 
-**Bot ECS Task:**
+**Bot (EC2 t3.micro — docker run env vars):**
 
 | Variable | Default | Required |
 |---|---|---|
@@ -138,6 +155,4 @@ Image is tagged with the first 8 chars of the commit SHA + `latest`.
 | `BOT_USER_COUNT` | `20` | |
 | `BOT_CREDS_FILE` | `/tmp/bot_creds.json` | |
 
-In ECS, both task definitions use the same image with different commands:
-- Crawler task: `["crawl"]`
-- Bot task: `["bot"]`
+CI only pushes the image to ECR. Bot deployment is manual — SSH + docker pull + docker run.
