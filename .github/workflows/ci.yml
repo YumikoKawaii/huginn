@@ -42,12 +42,6 @@ jobs:
         env:
           REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           REPO: ${{ secrets.ECR_REPO }}
-          TAG: ${{ github.sha }}
         run: |
-          SHORT_SHA=${TAG::8}
-          docker build \
-            -t $REGISTRY/$REPO:$SHORT_SHA \
-            -t $REGISTRY/$REPO:latest \
-            .
-          docker push $REGISTRY/$REPO:$SHORT_SHA
+          docker build -t $REGISTRY/$REPO:latest .
           docker push $REGISTRY/$REPO:latest
