@@ -10,9 +10,13 @@ This means on most hourly runs, priority series that have no new chapters
 produce zero download work.
 """
 
+import logging
+
 import requests
 
 from shared.api_client import ApiClient
+
+log = logging.getLogger(__name__)
 
 _MANGADEX_API = "https://api.mangadex.org"
 
@@ -112,21 +116,23 @@ def resolve_priority_chapters(
         if not title:
             continue
         try:
+            log.info("Syncing '%s'", title)
             manga = _search_mangadex(title, language)
             if not manga:
-                print(f"  [sync] '{title}': not found on MangaDex")
+                log.warning("'%s': not found on MangaDex — skipping", title)
                 continue
 
-            _, latest_ch = _archive_latest_chapter(api_client, title)
-            new_chapters = _get_mangadex_chapters(manga["id"], language, after_chapter=latest_ch)
+            mangadex_title = (manga.get("attributes", {}).get("title", {}) or {}).get("en", title)
+            log.debug("'%s': matched MangaDex title '%s' (id=%s)", title, mangadex_title, manga["id"])
 
-            print(
-                f"  [sync] '{title}': {len(new_chapters)} new chapter(s) "
-                f"(archive latest: ch{latest_ch})"
-            )
+            _, latest_ch = _archive_latest_chapter(api_client, title)
+            log.debug("'%s': archive latest chapter = %s", title, latest_ch)
+
+            new_chapters = _get_mangadex_chapters(manga["id"], language, after_chapter=latest_ch)
+            log.info("'%s': %d new chapter(s) to fetch (after ch%s)", title, len(new_chapters), latest_ch)
             chapter_ids.extend(ch["id"] for ch in new_chapters)
 
         except Exception as exc:
-            print(f"  [sync] '{title}': error — {exc}")
+            log.error("'%s': sync failed — %s", title, exc)
 
     return chapter_ids

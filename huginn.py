@@ -8,7 +8,21 @@ Usage:
 """
 
 import argparse
+import logging
 import sys
+
+
+def _setup_logging():
+    logging.basicConfig(
+        level=logging.INFO,
+        format="%(asctime)s [%(levelname)s] %(name)s: %(message)s",
+        datefmt="%Y-%m-%dT%H:%M:%S",
+        stream=sys.stdout,
+    )
+    # Quiet down noisy third-party loggers
+    logging.getLogger("scrapy").setLevel(logging.WARNING)
+    logging.getLogger("twisted").setLevel(logging.WARNING)
+    logging.getLogger("filelock").setLevel(logging.WARNING)
 
 
 def cmd_crawl(_args):
@@ -35,6 +49,7 @@ def main():
 
     args = parser.parse_args()
 
+    _setup_logging()
     dispatch = {"crawl": cmd_crawl, "bot": cmd_bot}
     dispatch[args.command](args)
 

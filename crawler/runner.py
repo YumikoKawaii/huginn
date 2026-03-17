@@ -17,11 +17,12 @@ Environment variables:
   CRAWL_LANGUAGE     MangaDex language code (default: en)
 """
 
+import logging
 import os
 import sys
+import time
 from pathlib import Path
 
-# Ensure repo root is on the path when running as a script
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from scrapy.crawler import CrawlerProcess
@@ -30,6 +31,8 @@ from scrapy.utils.project import get_project_settings
 from shared.api_client import ApiClient, load_env
 from crawler.sync import resolve_priority_chapters
 from crawler.uploader import upload_all
+
+log = logging.getLogger(__name__)
 
 MAX_CHAPTERS = int(os.environ.get("MAX_CHAPTERS", "350"))
 MAX_RANDOM_MANGA = int(os.environ.get("MAX_RANDOM_MANGA", "100"))
@@ -55,6 +58,7 @@ def _build_client() -> ApiClient:
         password=os.environ["API_PASSWORD"],
     )
     client.login()
+    log.info("Authenticated as %s", os.environ["API_EMAIL"])
     return client
 
 
@@ -67,7 +71,7 @@ def _run_scrapy(priority_chapter_ids: list[str], random_chapter_budget: int):
     process = CrawlerProcess(settings)
 
     if priority_chapter_ids:
-        print(f"[scrapy] Queuing {len(priority_chapter_ids)} priority chapter(s)")
+        log.info("Scrapy: queuing %d priority chapter(s)", len(priority_chapter_ids))
         process.crawl(
             MangadexSpider,
             chapter_ids=",".join(priority_chapter_ids),
@@ -75,9 +79,11 @@ def _run_scrapy(priority_chapter_ids: list[str], random_chapter_budget: int):
         )
 
     if random_chapter_budget > 0:
-        # Estimate manga titles needed; each averages ~3 chapters fetched
         manga_count = min(max(1, random_chapter_budget // 3), MAX_RANDOM_MANGA)
-        print(f"[scrapy] Discovery: {manga_count} manga titles, budget {random_chapter_budget} chapters")
+        log.info(
+            "Scrapy: discovery — %d manga title(s), chapter budget %d",
+            manga_count, random_chapter_budget,
+        )
         process.crawl(
             MangadexSpider,
             max_manga=manga_count,
@@ -94,44 +100,51 @@ def main():
 
     missing = [k for k in ("API_BASE_URL", "API_EMAIL", "API_PASSWORD") if not os.environ.get(k)]
     if missing:
-        print(f"Error: missing env vars: {', '.join(missing)}")
+        log.error("Missing required env vars: %s", ", ".join(missing))
         sys.exit(1)
 
-    print("=== Huginn Crawler ===")
+    run_start = time.time()
+    log.info("=== Huginn Crawler starting (budget=%d chapters, language=%s) ===",
+             MAX_CHAPTERS, LANGUAGE)
 
     # ── Phase 1: Priority sync ──────────────────────────────────────────
     titles = _load_priority_titles()
     priority_chapter_ids: list[str] = []
 
+    t = time.time()
     if titles:
-        print(f"\n[Phase 1] Priority sync: {len(titles)} title(s)")
+        log.info("[Phase 1] Priority sync — %d title(s): %s", len(titles), ", ".join(titles))
         client = _build_client()
         priority_chapter_ids = resolve_priority_chapters(client, titles, LANGUAGE)
-        print(f"  → {len(priority_chapter_ids)} new priority chapter(s)")
+        log.info("[Phase 1] Done in %.1fs — %d new priority chapter(s)",
+                 time.time() - t, len(priority_chapter_ids))
     else:
-        print("\n[Phase 1] No priority titles — skipping")
+        log.info("[Phase 1] No priority titles configured — skipping")
 
     # ── Phase 2: Calculate discovery budget ────────────────────────────
     random_budget = max(0, MAX_CHAPTERS - len(priority_chapter_ids))
-    print(
-        f"\n[Phase 2] Budget: {MAX_CHAPTERS} total  "
-        f"| {len(priority_chapter_ids)} priority  "
-        f"| {random_budget} discovery"
+    log.info(
+        "[Phase 2] Budget: %d total | %d priority | %d discovery",
+        MAX_CHAPTERS, len(priority_chapter_ids), random_budget,
     )
 
     # ── Phase 3: Download ───────────────────────────────────────────────
+    t = time.time()
     if priority_chapter_ids or random_budget > 0:
-        print("\n[Phase 3] Starting Scrapy")
+        log.info("[Phase 3] Starting Scrapy download")
         _run_scrapy(priority_chapter_ids, random_budget)
+        log.info("[Phase 3] Scrapy finished in %.1fs", time.time() - t)
     else:
-        print("\n[Phase 3] Nothing to download — skipping Scrapy")
+        log.info("[Phase 3] Nothing to download — skipping Scrapy")
 
     # ── Phase 4: Upload ─────────────────────────────────────────────────
-    print("\n[Phase 4] Uploading to archive")
+    t = time.time()
+    log.info("[Phase 4] Uploading zips to archive")
     client = _build_client()  # re-authenticate after potentially long crawl
     upload_all(client, ZIPS_DIR)
+    log.info("[Phase 4] Upload finished in %.1fs", time.time() - t)
 
-    print("\n=== Done ===")
+    log.info("=== Crawler done — total elapsed %.1fs ===", time.time() - run_start)
 
 
 if __name__ == "__main__":

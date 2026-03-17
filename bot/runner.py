@@ -14,6 +14,7 @@ Environment variables:
 """
 
 import asyncio
+import logging
 import os
 import random
 import sys
@@ -28,19 +29,22 @@ from bot.client import AnonClient, AuthClient
 from bot.users import load_or_setup_users
 from bot.behaviors import anonymous_session, authenticated_session
 
+log = logging.getLogger(__name__)
+
 CCU = int(os.environ.get("BOT_CCU", "20"))
-
-# Pause between sessions within a single worker (seconds)
 _SESSION_PAUSE = (3.0, 10.0)
-
-# Fraction of sessions that use an authenticated user
 _AUTH_RATIO = 0.30
+_LOG_EVERY = 10  # log worker stats every N sessions
 
 
 async def _worker(worker_id: int, base_url: str, users: list[dict], http: aiohttp.ClientSession):
     """Single worker — runs sessions in an infinite loop."""
+    sessions = 0
+    errors = 0
+
     while True:
         use_auth = bool(users) and random.random() < _AUTH_RATIO
+        kind = "auth" if use_auth else "anon"
 
         try:
             if use_auth:
@@ -50,9 +54,16 @@ async def _worker(worker_id: int, base_url: str, users: list[dict], http: aiohtt
             else:
                 client = AnonClient(base_url, http)
                 await anonymous_session(client)
+
+            sessions += 1
+            if sessions % _LOG_EVERY == 0:
+                log.info("worker-%d: %d sessions completed (%d errors, last: %s)",
+                         worker_id, sessions, errors, kind)
+
         except Exception as exc:
-            # Never crash a worker — log and continue
-            print(f"[worker-{worker_id}] session error: {exc}")
+            errors += 1
+            log.warning("worker-%d: %s session error [total errors: %d]: %s",
+                        worker_id, kind, errors, exc)
 
         await asyncio.sleep(random.uniform(*_SESSION_PAUSE))
 
@@ -64,11 +75,12 @@ async def main():
     if not base_url:
         raise SystemExit("API_BASE_URL is not set")
 
-    print(f"[bot] Initialising — {CCU} concurrent workers, auth_ratio={_AUTH_RATIO}")
+    log.info("=== Huginn Bot starting — %d workers, auth_ratio=%.0f%% ===",
+             CCU, _AUTH_RATIO * 100)
 
     users = load_or_setup_users(base_url)
-    print(f"[bot] {len(users)} bot user(s) available")
-    print(f"[bot] Starting {CCU} workers against {base_url}\n")
+    log.info("%d bot user(s) available", len(users))
+    log.info("Starting %d workers against %s", CCU, base_url)
 
     connector = aiohttp.TCPConnector(limit=CCU + 5)
     async with aiohttp.ClientSession(connector=connector) as http:

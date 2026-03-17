@@ -106,12 +106,37 @@ BOT_CCU=20
 
 ## CI / Deploy
 
-On push to `main`, GitHub Actions builds both Docker images and pushes to ECR.
+On push to `master`, GitHub Actions lints then builds and pushes to ECR.
+Image is tagged with the first 8 chars of the commit SHA + `latest`.
 
-Required repository secrets:
-- `AWS_ROLE_ARN` — IAM role with ECR push permissions (OIDC)
-- `AWS_REGION`
-- `ECR_REPO` — single ECR repository for both crawler and bot
+**GitHub Secrets:**
+
+| Secret | Description |
+|---|---|
+| `AWS_ACCESS_KEY_ID` | IAM user access key |
+| `AWS_SECRET_ACCESS_KEY` | IAM user secret key |
+| `AWS_REGION` | e.g. `ap-southeast-1` |
+| `ECR_REPO` | ECR repository name e.g. `huginn` |
+
+**Crawler ECS Task:**
+
+| Variable | Default | Required |
+|---|---|---|
+| `API_BASE_URL` | — | ✓ |
+| `API_EMAIL` | — | ✓ |
+| `API_PASSWORD` | — | ✓ |
+| `MAX_CHAPTERS` | `350` | |
+| `MAX_RANDOM_MANGA` | `100` | |
+| `CRAWL_LANGUAGE` | `en` | |
+
+**Bot ECS Task:**
+
+| Variable | Default | Required |
+|---|---|---|
+| `API_BASE_URL` | — | ✓ |
+| `BOT_CCU` | `20` | |
+| `BOT_USER_COUNT` | `20` | |
+| `BOT_CREDS_FILE` | `/tmp/bot_creds.json` | |
 
 In ECS, both task definitions use the same image with different commands:
 - Crawler task: `["crawl"]`
