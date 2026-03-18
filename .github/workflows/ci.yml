@@ -98,9 +98,9 @@ jobs:
 
       - name: Deploy browser bot to EC2
         env:
-          EC2_HOST: ${{ secrets.EC2_BROWSER_HOST }}
-          EC2_USER: ${{ secrets.EC2_BROWSER_USER }}
-          EC2_SSH_KEY: ${{ secrets.EC2_BROWSER_SSH_KEY }}
+          EC2_HOSTS: ${{ secrets.EC2_BROWSER_HOST }}
+          EC2_USER: ${{ secrets.EC2_USER }}
+          EC2_SSH_KEY: ${{ secrets.EC2_SSH_KEY }}
           REGISTRY: ${{ secrets.ECR_REGISTRY }}
           REPO: ${{ secrets.ECR_REPO }}
           API_BASE_URL: ${{ secrets.API_BASE_URL }}
@@ -111,18 +111,25 @@ jobs:
 
           echo "$EC2_SSH_KEY" > /tmp/ec2_key
           chmod 600 /tmp/ec2_key
-          ssh -o StrictHostKeyChecking=no -i /tmp/ec2_key $EC2_USER@$EC2_HOST "
-            echo '$ECR_PASSWORD' | docker login --username AWS --password-stdin $REGISTRY
 
-            docker pull $REGISTRY/$REPO:latest
+          IFS=',' read -ra HOSTS <<< "$EC2_HOSTS"
+          for HOST in "${HOSTS[@]}"; do
+            HOST=$(echo "$HOST" | xargs)
+            echo "Deploying to $HOST"
+            ssh -o StrictHostKeyChecking=no -i /tmp/ec2_key $EC2_USER@$HOST "
+              echo '$ECR_PASSWORD' | docker login --username AWS --password-stdin $REGISTRY
 
-            docker rm -f huginn-browser-bot || true
+              docker pull $REGISTRY/$REPO:latest
 
-            docker run -d --restart unless-stopped \
-              -e API_BASE_URL=$API_BASE_URL \
-              ${BROWSER_BOT_CCU:+-e BROWSER_BOT_CCU=$BROWSER_BOT_CCU} \
-              ${BROWSER_BOT_COUNT:+-e BROWSER_BOT_COUNT=$BROWSER_BOT_COUNT} \
-              --name huginn-browser-bot \
-              $REGISTRY/$REPO:latest browser-bot
-          "
+              docker rm -f huginn-browser-bot || true
+
+              docker run -d --restart unless-stopped \
+                -e API_BASE_URL=$API_BASE_URL \
+                ${BROWSER_BOT_CCU:+-e BROWSER_BOT_CCU=$BROWSER_BOT_CCU} \
+                ${BROWSER_BOT_COUNT:+-e BROWSER_BOT_COUNT=$BROWSER_BOT_COUNT} \
+                --name huginn-browser-bot \
+                $REGISTRY/$REPO:latest browser-bot
+            "
+          done
+
           rm -f /tmp/ec2_key

@@ -169,10 +169,10 @@ On push to `master`, GitHub Actions runs: **lint → build & push to ECR → dep
 
 | Secret | Description |
 |---|---|
-| `EC2_BROWSER_HOST` | t3.small IP |
-| `EC2_BROWSER_USER` | SSH user |
-| `EC2_BROWSER_SSH_KEY` | PEM key content |
-| `BROWSER_BOT_CCU` | Concurrent workers (app default: `5`) |
+| `EC2_BROWSER_HOST` | Comma-separated IPs — deploys to all instances e.g. `1.2.3.4,5.6.7.8` |
+| `BROWSER_BOT_CCU` | Concurrent workers per instance (app default: `5`) |
 | `BROWSER_BOT_COUNT` | Bot accounts (app default: `10`) |
+
+Reuses `EC2_USER` and `EC2_SSH_KEY` from the api bot secrets.
 
 `AUTH_TOKEN_KEY` env var (default: `token`) must match the localStorage key the frontend uses for JWT.
