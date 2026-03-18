@@ -3,8 +3,9 @@
 huginn — unified CLI entrypoint.
 
 Usage:
-    .venv/bin/python huginn.py crawl    # run the ECS crawler (priority → discovery → upload)
-    .venv/bin/python huginn.py bot      # run the ECS bot (long-running traffic simulator)
+    .venv/bin/python huginn.py crawl        # run the ECS crawler (priority → discovery → upload)
+    .venv/bin/python huginn.py bot          # run the API traffic bot (long-running)
+    .venv/bin/python huginn.py browser-bot  # run the Playwright browser bot (long-running)
 """
 
 import argparse
@@ -36,6 +37,12 @@ def cmd_bot(_args):
     asyncio.run(main())
 
 
+def cmd_browser_bot(_args):
+    import asyncio
+    from browser_bot.runner import main
+    asyncio.run(main())
+
+
 def main():
     parser = argparse.ArgumentParser(
         prog="huginn",
@@ -44,13 +51,18 @@ def main():
     sub = parser.add_subparsers(dest="command", metavar="<command>")
     sub.required = True
 
-    sub.add_parser("crawl", help="Run the crawler (priority sync → discovery → download → upload)")
-    sub.add_parser("bot",   help="Run the traffic bot (long-running, 20 CCU)")
+    sub.add_parser("crawl",       help="Run the crawler (priority sync → discovery → download → upload)")
+    sub.add_parser("bot",         help="Run the API traffic bot (long-running)")
+    sub.add_parser("browser-bot", help="Run the Playwright browser bot (long-running)")
 
     args = parser.parse_args()
 
     _setup_logging()
-    dispatch = {"crawl": cmd_crawl, "bot": cmd_bot}
+    dispatch = {
+        "crawl":       cmd_crawl,
+        "bot":         cmd_bot,
+        "browser-bot": cmd_browser_bot,
+    }
     dispatch[args.command](args)
 
 

@@ -5,6 +5,7 @@ requests>=2.31
 
 # Bot
 aiohttp>=3.9
+playwright>=1.44
 
 # Shared
 itemadapter>=0.9

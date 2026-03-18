@@ -18,7 +18,7 @@ jobs:
         run: pip install ruff
 
       - name: Lint
-        run: ruff check shared/ crawler/ bot/
+        run: ruff check shared/ crawler/ bot/ browser_bot/
 
   build-and-push:
     needs: lint
@@ -81,5 +81,48 @@ jobs:
               ${BOT_USER_COUNT:+-e BOT_USER_COUNT=$BOT_USER_COUNT} \
               --name huginn-bot \
               $REGISTRY/$REPO:latest bot
+          "
+          rm -f /tmp/ec2_key
+
+  deploy-browser-bot:
+    needs: build-and-push
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Deploy browser bot to EC2
+        env:
+          EC2_HOST: ${{ secrets.EC2_BROWSER_HOST }}
+          EC2_USER: ${{ secrets.EC2_BROWSER_USER }}
+          EC2_SSH_KEY: ${{ secrets.EC2_BROWSER_SSH_KEY }}
+          REGISTRY: ${{ secrets.ECR_REGISTRY }}
+          REPO: ${{ secrets.ECR_REPO }}
+          API_BASE_URL: ${{ secrets.API_BASE_URL }}
+          BROWSER_BOT_CCU: ${{ secrets.BROWSER_BOT_CCU }}
+          BROWSER_BOT_COUNT: ${{ secrets.BROWSER_BOT_COUNT }}
+        run: |
+          ECR_PASSWORD=$(aws ecr get-login-password --region ${{ secrets.AWS_REGION }})
+
+          echo "$EC2_SSH_KEY" > /tmp/ec2_key
+          chmod 600 /tmp/ec2_key
+          ssh -o StrictHostKeyChecking=no -i /tmp/ec2_key $EC2_USER@$EC2_HOST "
+            echo '$ECR_PASSWORD' | docker login --username AWS --password-stdin $REGISTRY
+
+            docker pull $REGISTRY/$REPO:latest
+
+            docker rm -f huginn-browser-bot || true
+
+            docker run -d --restart unless-stopped \
+              -e API_BASE_URL=$API_BASE_URL \
+              ${BROWSER_BOT_CCU:+-e BROWSER_BOT_CCU=$BROWSER_BOT_CCU} \
+              ${BROWSER_BOT_COUNT:+-e BROWSER_BOT_COUNT=$BROWSER_BOT_COUNT} \
+              --name huginn-browser-bot \
+              $REGISTRY/$REPO:latest browser-bot
           "
           rm -f /tmp/ec2_key
