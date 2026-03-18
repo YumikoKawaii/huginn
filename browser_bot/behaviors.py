@@ -106,7 +106,9 @@ async def anonymous_session(browser: Browser):
     context = await _new_context(browser)
     try:
         page = await context.new_page()
+        log.info("anon session start")
         await _pick_and_read(page)
+        log.info("anon session done")
     finally:
         await context.close()
 
@@ -115,6 +117,7 @@ async def authenticated_session(browser: Browser, token: str):
     context = await _new_context(browser, token=token)
     try:
         page = await context.new_page()
+        log.info("auth session start")
         manga_url = await _pick_and_read(page)
 
         if manga_url and random.random() < _BOOKMARK_CHANCE:
@@ -135,4 +138,5 @@ async def authenticated_session(browser: Browser, token: str):
             except Exception as exc:
                 log.warning("Bookmark fetch failed: %s", exc)
     finally:
+        log.info("auth session done")
         await context.close()
