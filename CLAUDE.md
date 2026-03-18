@@ -169,7 +169,7 @@ On push to `master`, GitHub Actions runs: **lint → build & push to ECR → dep
 
 | Secret | Description |
 |---|---|
-| `EC2_BROWSER_HOST` | Comma-separated IPs — deploys to all instances e.g. `1.2.3.4,5.6.7.8` |
+| `EC2_BROWSER_HOSTS` | Comma-separated IPs — deploys to all instances e.g. `1.2.3.4,5.6.7.8` |
 | `BROWSER_BOT_CCU` | Concurrent workers per instance (app default: `5`) |
 | `BROWSER_BOT_COUNT` | Bot accounts (app default: `10`) |
 
