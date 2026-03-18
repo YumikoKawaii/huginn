@@ -19,7 +19,8 @@ ENV SCRAPY_SETTINGS_MODULE=crawler.settings
 
 ENTRYPOINT ["python", "huginn.py"]
 
-# Override in ECS task definition:
-#   crawler task: CMD ["crawl"]
-#   bot task:     CMD ["bot"]
+# Override at runtime:
+#   crawler task:     CMD ["crawl"]
+#   api bot task:     CMD ["bot"]
+#   browser bot task: CMD ["browser-bot"]
 CMD ["--help"]
