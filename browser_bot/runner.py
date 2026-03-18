@@ -24,6 +24,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
+import aiohttp
 from playwright.async_api import async_playwright
 
 from shared.api_client import ApiClient, load_env
@@ -48,7 +49,7 @@ def _get_token(base_url: str, creds: dict) -> str | None:
         return None
 
 
-async def _worker(worker_id: int, base_url: str, users: list[dict], browser):
+async def _worker(worker_id: int, base_url: str, users: list[dict], browser, http: aiohttp.ClientSession):
     sessions = 0
     errors = 0
 
@@ -63,11 +64,11 @@ async def _worker(worker_id: int, base_url: str, users: list[dict], browser):
                     None, _get_token, base_url, creds
                 )
                 if token:
-                    await authenticated_session(browser, token)
+                    await authenticated_session(browser, http, token)
                 else:
-                    await anonymous_session(browser)
+                    await anonymous_session(browser, http)
             else:
-                await anonymous_session(browser)
+                await anonymous_session(browser, http)
 
             sessions += 1
             if sessions % _LOG_EVERY == 0:
@@ -103,12 +104,14 @@ async def main():
     users = load_or_setup_users(base_url)
     log.info("%d bot user(s) available", len(users))
 
-    async with async_playwright() as pw:
-        browser = await pw.chromium.launch(headless=True)
-        log.info("Browser launched — starting %d workers", CCU)
-        try:
-            await asyncio.gather(
-                *[_worker(i, base_url, users, browser) for i in range(CCU)]
-            )
-        finally:
-            await browser.close()
+    connector = aiohttp.TCPConnector(ssl=False)
+    async with aiohttp.ClientSession(connector=connector) as http:
+        async with async_playwright() as pw:
+            browser = await pw.chromium.launch(headless=True)
+            log.info("Browser launched — starting %d workers", CCU)
+            try:
+                await asyncio.gather(
+                    *[_worker(i, base_url, users, browser, http) for i in range(CCU)]
+                )
+            finally:
+                await browser.close()
